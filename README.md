@@ -16,4 +16,5 @@
 * [ ] Stream events
   * bits
   * raids / hosts
+* [X] add trail feature
   
