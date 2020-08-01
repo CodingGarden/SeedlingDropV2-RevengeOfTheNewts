@@ -1,4 +1,3 @@
-
 # Seedling Drop v2 - Revenge of the newts!
 
 ## TODO:
@@ -14,3 +13,7 @@
 * [ ] !drop me
 * [ ] Sub tier effects
 * [ ] Camera posenet swatting!
+* [ ] Stream events
+  * bits
+  * raids / hosts
+  

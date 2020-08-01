@@ -4,7 +4,6 @@ import tmi from 'tmi.js';
 import Drop from './Drop';
 import ImageManager from './ImageManager';
 
-
 const client = new tmi.Client({
 	connection: {
 		secure: true,
