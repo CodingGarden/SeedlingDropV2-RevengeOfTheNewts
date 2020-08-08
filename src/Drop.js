@@ -10,6 +10,8 @@ export default class Drop {
     this.p5 = p5;
     this.image = image;
     this.landed = false;
+    this.wobble = 0;
+    this.size = 56
     this.position = p5.createVector(
       p5.random(0, p5.windowWidth - image.width),
       -100,
@@ -22,17 +24,20 @@ export default class Drop {
 
   draw(now) {
     let alpha = 1;
+    this.p5.push()
     if (this.landed) {
       const diff = now - this.landTime;
       alpha = diff >= config.dropTimeout ? 0 : this.p5.map(diff, config.dropTimeout, 0, 0, 1);
       this.p5.drawingContext.globalAlpha = alpha;
     }
+    // tran
     this.p5.image(
       this.image,
       this.position.x,
       this.position.y,
     );
-    this.p5.drawingContext.globalAlpha = 1;
+    this.p5.pop()
+
     return alpha <= 0;
   }
 
