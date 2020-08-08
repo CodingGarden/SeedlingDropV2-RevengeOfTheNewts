@@ -21,9 +21,14 @@ export default function sketch(p5) {
   const imageUrl = 'https://static-cdn.jtvnw.net/emoticons/v1/303121909/4.0';
   const drops = [];
   const imageManager = new ImageManager(p5);
+  let trailing = false;
 
   client.on('message', async (channel, tags, message, self) => {
-    if (message.startsWith('!drop') && tags.emotes) {
+    if (tags.username === 'codinggarden' && message === '!start-trail') trailing = true;
+
+    else if (tags.username === 'codinggarden' && message === '!end-trail') trailing = false; 
+
+    else if (message.startsWith('!drop') && tags.emotes) {
       const emoteIds = Object.keys(tags.emotes);
       const emoteId = p5.random(emoteIds);
       const imageUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/4.0`;
@@ -37,7 +42,7 @@ export default function sketch(p5) {
     p5.createCanvas(p5.windowWidth, p5.windowHeight);
   };
   p5.draw = () => {
-    p5.clear();
+    if (!trailing) p5.clear();
     drops.forEach((drop) => {
       drop.draw();
       drop.update();
