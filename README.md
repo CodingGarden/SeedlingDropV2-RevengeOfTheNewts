@@ -17,7 +17,7 @@
 * [ ] A garden with growing seedlings
   * [ ] Dropper name
 * [ ] Sub tier effects
-* [ ] Camera posenet swatting!
+* [ ] Camera posenet - drops bounce off of me!
 * [ ] Stream events
   * bits
   * raids / hosts
