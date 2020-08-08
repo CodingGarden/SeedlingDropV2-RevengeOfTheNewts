@@ -1,4 +1,5 @@
 import { Vector } from 'p5';
+import config from './config';
 
 export default class Drop {
   /**
@@ -19,12 +20,20 @@ export default class Drop {
     );
   }
 
-  draw() {
+  draw(now) {
+    let alpha = 1;
+    if (this.landed) {
+      const diff = now - this.landTime;
+      alpha = diff >= config.dropTimeout ? 0 : this.p5.map(diff, config.dropTimeout, 0, 0, 1);
+      this.p5.drawingContext.globalAlpha = alpha;
+    }
     this.p5.image(
       this.image,
       this.position.x,
       this.position.y,
     );
+    this.p5.drawingContext.globalAlpha = 1;
+    return alpha <= 0;
   }
 
   update() {
@@ -41,6 +50,7 @@ export default class Drop {
     if (position.y + image.height >= p5.windowHeight) {
       position.y = p5.windowHeight - image.height;
       this.landed = true;
+      this.landTime = Date.now();
     }
   }
 }

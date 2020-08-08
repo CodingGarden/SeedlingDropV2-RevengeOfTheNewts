@@ -3,6 +3,7 @@
 import tmi from 'tmi.js';
 import Drop from './Drop';
 import ImageManager from './ImageManager';
+import config from './config';
 
 const client = new tmi.Client({
 	connection: {
@@ -18,20 +19,26 @@ client.connect();
  * @param {import('p5')} p5
  */
 export default function sketch(p5) {
-  const imageUrl = 'https://static-cdn.jtvnw.net/emoticons/v1/303121909/4.0';
-  const drops = [];
+  let drops = [];
   const imageManager = new ImageManager(p5);
   let trailing = false;
 
   client.on('message', async (channel, tags, message, self) => {
-    if (tags.username === 'codinggarden' && message === '!start-trail') trailing = true;
+    if (tags.username === 'codinggarden') {
+      if (message === '!start-trail') return trailing = true;
+      else if (message === '!end-trail') return trailing = false;
+      else if (message.match(/^\!drop\-timeout/)) {
+        const timeout = Number(message.split(' ')[1]);
+        if (!isNaN(timeout)) {
+          config.dropTimeout = timeout * 1000;
+        }
+      }
+    }
 
-    else if (tags.username === 'codinggarden' && message === '!end-trail') trailing = false; 
-
-    else if (message.startsWith('!drop') && tags.emotes) {
+    if (message.startsWith('!drop') && tags.emotes) {
       const emoteIds = Object.keys(tags.emotes);
       const emoteId = p5.random(emoteIds);
-      const imageUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/4.0`;
+      const imageUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/2.0`;
       const image = await imageManager.getImage(imageUrl);
       drops.push(new Drop(p5, image));
     }
@@ -40,12 +47,17 @@ export default function sketch(p5) {
   p5.setup = async () => {
     p5.frameRate(60);
     p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    const image = await imageManager.getImage('https://static-cdn.jtvnw.net/emoticons/v1/303121909/2.0');
+    drops = Array.from({ length: 1000 }, () => {
+      return new Drop(p5, image);
+    });
   };
   p5.draw = () => {
     if (!trailing) p5.clear();
-    drops.forEach((drop) => {
-      drop.draw();
+    const now = Date.now();
+    drops = drops.filter((drop) => {
       drop.update();
+      return !drop.draw(now);
     });
   };
 }

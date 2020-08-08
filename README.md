@@ -2,7 +2,7 @@
 
 ## TODO:
 
-* [ ] clear landed drop after 90 seconds
+* [x] clear landed drop after 90 seconds
 * [ ] wobble the drops
 * [ ] memory usage! clear cache after timeout
 * [ ] Collision detection between drops
