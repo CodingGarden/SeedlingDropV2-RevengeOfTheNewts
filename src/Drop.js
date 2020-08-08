@@ -24,20 +24,20 @@ export default class Drop {
 
   draw(now) {
     let alpha = 1;
-    this.p5.push()
+    this.p5.push();
     if (this.landed) {
       const diff = now - this.landTime;
       alpha = diff >= config.dropTimeout ? 0 : this.p5.map(diff, config.dropTimeout, 0, 0, 1);
       this.p5.drawingContext.globalAlpha = alpha;
     }
-    this.p5.translate(this.position.x, this.position.y-this.size/2)
-    this.p5.rotate(this.p5.map(this.p5.sin(this.wobble), -1, 1, -this.p5.QUARTER_PI/2, this.p5.QUARTER_PI/2))
-    this.p5.translate(0, this.size/2)
+    this.p5.translate(this.position.x, this.position.y-this.size/2);
+    this.p5.rotate(this.p5.map(this.p5.sin(this.wobble), -1, 1, -this.p5.QUARTER_PI/2, this.p5.QUARTER_PI/2));
+    this.p5.translate(0, this.size/2);
     this.p5.image(
       this.image,
       0,0
     );
-    this.p5.pop()
+    this.p5.pop();
 
     return alpha <= 0;
   }
