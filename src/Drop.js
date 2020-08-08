@@ -30,11 +30,12 @@ export default class Drop {
       alpha = diff >= config.dropTimeout ? 0 : this.p5.map(diff, config.dropTimeout, 0, 0, 1);
       this.p5.drawingContext.globalAlpha = alpha;
     }
-    // tran
+    this.p5.translate(this.position.x, this.position.y-this.size/2)
+    this.p5.rotate(this.p5.map(this.p5.sin(this.wobble), -1, 1, -this.p5.QUARTER_PI/2, this.p5.QUARTER_PI/2))
+    this.p5.translate(0, this.size/2)
     this.p5.image(
       this.image,
-      this.position.x,
-      this.position.y,
+      0,0
     );
     this.p5.pop()
 
@@ -43,7 +44,7 @@ export default class Drop {
 
   update() {
     const { position, velocity, p5, image, landed } = this;
-    if (landed) return;
+    if (landed) return this.wobble = 0;
     position.add(velocity);
     if (position.x <= 0) {
       velocity.mult(-1, 1);
@@ -57,5 +58,6 @@ export default class Drop {
       this.landed = true;
       this.landTime = Date.now();
     }
+    this.wobble+=.05
   }
 }
