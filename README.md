@@ -2,15 +2,15 @@
 
 ## TODO:
 
+* [ ] emoji support
+* [ ] BTTV emotes and FFZ emotes
+* [ ] !drop me
 * [x] clear landed drop after 90 seconds
-* [ ] wobble the drops
+* [x] wobble the drops (thank you david!!!)
 * [ ] memory usage! clear cache after timeout
 * [ ] Collision detection between drops
 * [ ] A garden with growing seedlings
   * [ ] Dropper name
-* [ ] emoji support
-* [ ] BTTV emotes and FFZ emotes
-* [ ] !drop me
 * [ ] Sub tier effects
 * [ ] Camera posenet swatting!
 * [ ] Stream events

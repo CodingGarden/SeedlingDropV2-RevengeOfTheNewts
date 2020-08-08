@@ -20,6 +20,7 @@ client.connect();
  */
 export default function sketch(p5) {
   let drops = [];
+  let dropQueue = [];
   const imageManager = new ImageManager(p5);
   let trailing = false;
 
@@ -40,17 +41,30 @@ export default function sketch(p5) {
       const emoteId = p5.random(emoteIds);
       const imageUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/2.0`;
       const image = await imageManager.getImage(imageUrl);
-      drops.push(new Drop(p5, image));
+      if (drops.length <= config.maxVisibleDrops) {
+        drops.push(new Drop(p5, image));
+      } else {
+        dropQueue.push(new Drop(p5, image));
+      }
     }
   });
 
   p5.setup = async () => {
     p5.frameRate(60);
-    p5.createCanvas(p5.windowWidth, p5.windowHeight);
-    const image = await imageManager.getImage('https://static-cdn.jtvnw.net/emoticons/v1/303121909/2.0');
-    drops = Array.from({ length: 1000 }, () => {
-      return new Drop(p5, image);
-    });
+    p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.P2D);
+    if (config.test) {
+      const images = await Promise.all([
+        'https://static-cdn.jtvnw.net/emoticons/v1/303046121/2.0',
+        'https://static-cdn.jtvnw.net/emoticons/v1/302039277/2.0',
+        'https://static-cdn.jtvnw.net/emoticons/v1/301988022/2.0',
+        // 'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/5ada077451d4120ea3918426/2x',
+        // 'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/5abc0096a05ad63caeccbe58/2x',
+        // 'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/59f06613ba7cdd47e9a4cad2/2x',
+      ].map(url => imageManager.getImage(url)));
+      drops = Array.from({ length: 10 }).reduce((drops) => {
+        return drops.concat(images.map(image => new Drop(p5, image)));
+      }, []);
+    }
   };
   p5.draw = () => {
     if (!trailing) p5.clear();
@@ -59,5 +73,10 @@ export default function sketch(p5) {
       drop.update();
       return !drop.draw(now);
     });
+    if (drops.length <= config.maxVisibleDrops) {
+      const end = config.maxVisibleDrops - drops.length;
+      drops = drops.concat(dropQueue.slice(0, end))
+      dropQueue = dropQueue.slice(end);
+    }
   };
 }
