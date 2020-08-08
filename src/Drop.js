@@ -30,8 +30,11 @@ export default class Drop {
       alpha = diff >= config.dropTimeout ? 0 : this.p5.map(diff, config.dropTimeout, 0, 0, 1);
       this.p5.drawingContext.globalAlpha = alpha;
     }
+    // translate to the point we want to rotate around, which is the top center of the drop
     this.p5.translate(this.position.x, this.position.y - this.size / 2);
+    // rotate by the drops wobble value mapped between -PI/16 and PI/16
     this.p5.rotate(this.p5.map(this.p5.sin(this.wobble), -1, 1, -this.p5.QUARTER_PI / 2, this.p5.QUARTER_PI / 2));
+    // translate down from the rotate point to the draw point (center)
     this.p5.translate(0, this.size / 2);
     this.p5.image(
       this.image,
