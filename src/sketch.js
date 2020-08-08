@@ -1,9 +1,11 @@
 /* eslint-disable no-param-reassign */
 
 import tmi from 'tmi.js';
+import clipImage from './white_circle.png';
 import Drop from './Drop';
 import ImageManager from './ImageManager';
 import config from './config';
+import UserManager from './UserManager';
 
 const client = new tmi.Client({
 	connection: {
@@ -22,7 +24,16 @@ export default function sketch(p5) {
   let drops = [];
   let dropQueue = [];
   const imageManager = new ImageManager(p5);
+  const userManager = new UserManager();
   let trailing = false;
+
+  const queueDrop = (image) => {
+    if (drops.length <= config.maxVisibleDrops) {
+      drops.push(new Drop(p5, image));
+    } else {
+      dropQueue.push(new Drop(p5, image));
+    }
+  };
 
   client.on('message', async (channel, tags, message, self) => {
     if (tags.username === 'codinggarden') {
@@ -36,15 +47,24 @@ export default function sketch(p5) {
       }
     }
 
-    if (message.startsWith('!drop') && tags.emotes) {
-      const emoteIds = Object.keys(tags.emotes);
-      const emoteId = p5.random(emoteIds);
-      const imageUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/2.0`;
-      const image = await imageManager.getImage(imageUrl);
-      if (drops.length <= config.maxVisibleDrops) {
-        drops.push(new Drop(p5, image));
-      } else {
-        dropQueue.push(new Drop(p5, image));
+    if (message.startsWith('!drop') || message.startsWith('!derp')) {
+      if (tags.emotes) {
+        const emoteIds = Object.keys(tags.emotes);
+        const emoteId = p5.random(emoteIds);
+        const imageUrl = `https://static-cdn.jtvnw.net/emoticons/v1/${emoteId}/2.0`;
+        const image = await imageManager.getImage(imageUrl);
+        queueDrop(image);
+      } else if (message.match(/\bme\b/)) {
+        const userId = tags['user-id'];
+        const user = await userManager.getUser(userId);
+        if (Date.now() - new Date(user.created_at) >= config.minAccountAge) {
+          // TODO: make sure this sizing doesn't break...
+          const imageUrl = user.logo.replace('300x300', '50x50');
+          const image = await imageManager.getImage(imageUrl);
+          const clip = await imageManager.getImage(clipImage);
+          image.mask(clip);
+          queueDrop(image);
+        }
       }
     }
   });
