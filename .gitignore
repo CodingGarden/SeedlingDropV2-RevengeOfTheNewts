@@ -116,3 +116,5 @@ dist
 .pnp.*
 
 src/config.js
+
+.vscode/
