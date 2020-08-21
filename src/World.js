@@ -20,18 +20,25 @@ export default class World {
   }
 
   draw() {
-    const { p5, trailing, drops, dropQueue } = this;
-    if (!trailing) p5.clear();
+    const {
+      p5, trailing, drops, dropQueue,
+    } = this;
+    if (trailing) {
+      p5.background('rgba(255, 255, 255, 0.05)');
+    } else {
+      p5.clear();
+    }
     const now = Date.now();
-    this.drops = drops.filter((drop) => {
+    drops = drops.filter((drop) => {
       drop.update();
       return !drop.draw(now);
     });
-    if (this.drops.length <= config.maxVisibleDrops) {
-      const end = config.maxVisibleDrops - this.drops.length;
-      this.drops = this.drops.concat(dropQueue.slice(0, end));
+    if (drops.length <= config.maxVisibleDrops) {
+      const end = config.maxVisibleDrops - drops.length;
+      drops = drops.concat(dropQueue.slice(0, end));
       this.dropQueue = dropQueue.slice(end);
     }
+    this.drops = drops;
   }
 
   async doDrop({ tags, message }) {
