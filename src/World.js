@@ -15,6 +15,8 @@ export default class World {
     this.trailing = false;
     this.userManager = new UserManager();
     this.imageManager = new ImageManager(p5);
+
+    this.draw = this.draw.bind(this);
   }
 
   draw() {
@@ -23,15 +25,16 @@ export default class World {
     } = this;
     if (!trailing) p5.clear();
     const now = Date.now();
-    this.drops = drops.filter((drop) => {
+    drops = drops.filter((drop) => {
       drop.update();
       return !drop.draw(now);
     });
-    if (this.drops.length <= config.maxVisibleDrops) {
-      const end = config.maxVisibleDrops - this.drops.length;
-      this.drops = this.drops.concat(dropQueue.slice(0, end));
+    if (drops.length <= config.maxVisibleDrops) {
+      const end = config.maxVisibleDrops - drops.length;
+      drops = drops.concat(dropQueue.slice(0, end));
       this.dropQueue = dropQueue.slice(end);
     }
+    this.drops = drops;
   }
 
   async doDrop({ tags, message }) {
