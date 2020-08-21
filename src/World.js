@@ -1,8 +1,9 @@
-import config from './config';
-import UserManager from './UserManager';
-import ImageManager from './ImageManager';
-import Drop from './Drop';
-import clipImage from './white_circle.png';
+import config from "./config";
+import UserManager from "./UserManager";
+import ImageManager from "./ImageManager";
+import CommandManager from "./CommandManager";
+import Drop from "./Drop";
+import clipImage from "./white_circle.png";
 
 export default class World {
   /**
@@ -15,8 +16,7 @@ export default class World {
     this.trailing = false;
     this.userManager = new UserManager();
     this.imageManager = new ImageManager(p5);
-
-    this.draw = this.draw.bind(this);
+    this.commandManager = new CommandManager(this, config.commandPrefix);
   }
 
   draw() {
@@ -49,11 +49,11 @@ export default class World {
       const image = await this.imageManager.getImage(imageUrl);
       this.queueDrop(image);
     } else if (message.match(/\bme\b/)) {
-      const userId = tags['user-id'];
+      const userId = tags["user-id"];
       const user = await this.userManager.getUser(userId);
       if (Date.now() - new Date(user.created_at) >= config.minAccountAge) {
         // TODO: make sure this sizing doesn't break...
-        const imageUrl = user.logo.replace('300x300', '50x50');
+        const imageUrl = user.logo.replace("300x300", "50x50");
         const image = await this.imageManager.getImage(imageUrl);
         const clip = await this.imageManager.getImage(clipImage);
         image.mask(clip);
