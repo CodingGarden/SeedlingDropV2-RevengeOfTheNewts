@@ -23,7 +23,11 @@ export default class World {
     const {
       p5, trailing, drops, dropQueue,
     } = this;
-    if (!trailing) p5.clear();
+    if (trailing) {
+      p5.background('rgba(255, 255, 255, 0.05)');
+    } else {
+      p5.clear();
+    }
     const now = Date.now();
     drops = drops.filter((drop) => {
       drop.update();
