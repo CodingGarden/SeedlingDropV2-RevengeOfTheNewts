@@ -6,13 +6,14 @@
 
 ## TODO:
 
+### Cleanup
+
+* [x] Move channel name to config
+* [ ] memory usage! clear cache after timeout
+
+## Features
 * [ ] emoji support
 * [ ] BTTV emotes and FFZ emotes
-* [ ] Move channel name to config
-* [x] !drop me
-* [x] clear landed drop after 90 seconds
-* [x] wobble the drops (thank you david!!!)
-* [ ] memory usage! clear cache after timeout
 * [ ] Collision detection between drops
 * [ ] A garden with growing seedlings
   * [ ] Dropper name
@@ -21,5 +22,8 @@
 * [ ] Stream events
   * bits
   * raids / hosts
+* [x] !drop me
+* [x] clear landed drop after 90 seconds
+* [x] wobble the drops (thank you david!!!)
 * [X] add trail feature
   
