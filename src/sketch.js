@@ -63,5 +63,5 @@ export default function sketch(p5) {
       );
     }
   };
-  p5.draw = world.draw.bind(world);
+  p5.draw = world.draw;
 }
