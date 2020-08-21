@@ -1,7 +1,7 @@
-import config from "../config";
+import config from '../config';
 
 module.exports = {
-  aliases: ["set-fade", "fade-set"],
+  aliases: ['set-fade', 'fade-set'],
   handle: ({ tags, args }) => {
     if (tags.badges && tags.badges.broadcaster) {
       if (!isNaN(args[0])) {

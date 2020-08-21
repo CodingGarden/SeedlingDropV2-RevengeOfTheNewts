@@ -1,6 +1,6 @@
-import * as drop from "./commands/drop";
-import * as trail from "./commands/trail";
-import * as fade from "./commands/fade";
+import * as drop from './commands/drop';
+import * as trail from './commands/trail';
+import * as fade from './commands/fade';
 
 export default class CommandManager {
   constructor(world, commandPrefix) {
@@ -33,7 +33,7 @@ export default class CommandManager {
     if (self) return;
     if (!message.startsWith(this.commandPrefix)) return;
 
-    const args = message.split(" ");
+    const args = message.split(' ');
     const command = args.shift().slice(this.commandPrefix.length);
 
     if (this.hasCommand(command)) {
