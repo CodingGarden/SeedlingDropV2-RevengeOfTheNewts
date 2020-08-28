@@ -57,8 +57,8 @@ export default function sketch(p5) {
           'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/59f06613ba7cdd47e9a4cad2/2x',
         ].map((url) => world.imageManager.getImage(url)),
       );
-      world.drops = Array.from({ length: 10 }).reduce(
-        (drops) => drops.concat(images.map((image) => new Drop(p5, image))),
+      world.drops = Array.from({ length: 1 }).reduce(
+        (drops) => drops.concat(images.map((image) => new Drop(p5, image, true))),
         [],
       );
     }
