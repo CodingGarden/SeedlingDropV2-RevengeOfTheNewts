@@ -47,14 +47,20 @@ export default class Drop {
     this.p5.pop();
 
     if (this.trailing) {
+      const { width, height } = this.image;
+      // copy the image to avoid seizures when dropping gifs
+      const image = this.p5.createImage(width, height);
+      image.copy(this.image, 0, 0, width, height, 0, 0, width, height);
+
       for (let i = 0; i < this.history.length; i += 1) {
         this.p5.push();
         const { translation, rotation } = this.history[i];
+        // TODO: this needs improvement as it affects the trail AND the drop
         this.p5.drawingContext.globalAlpha = i / this.history.length;
         this.p5.translate(translation.x, translation.y);
         this.p5.rotate(rotation);
-        this.p5.translate(0, this.image.height / 2);
-        this.p5.image(this.image, 0, 0);
+        this.p5.translate(0, image.height / 2);
+        this.p5.image(image, 0, 0);
         this.p5.pop();
       }
     }
