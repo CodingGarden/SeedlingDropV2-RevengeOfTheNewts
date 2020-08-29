@@ -28,6 +28,19 @@ export default class Drop {
   }
 
   draw(now) {
+    // this is the trail
+    for (let i = 0; i < this.history.length; i += 1) {
+      this.p5.push();
+      const { translation, rotation, image } = this.history[i];
+      // TODO: this needs improvement as it affects the trail AND the drop
+      this.p5.drawingContext.globalAlpha = i / this.history.length;
+      this.p5.translate(translation.x, translation.y);
+      this.p5.rotate(rotation);
+      this.p5.translate(0, image.height / 2);
+      this.p5.image(image, 0, 0);
+      this.p5.pop();
+    }
+
     let alpha = 1;
     this.p5.push();
     if (this.landed) {
@@ -40,30 +53,8 @@ export default class Drop {
     this.p5.rotate(this.rotation);
     // translate down from the rotate point to the draw point (center)
     this.p5.translate(0, this.image.height / 2);
-    this.p5.image(
-      this.image,
-      0, 0,
-    );
+    this.p5.image(this.image, 0, 0);
     this.p5.pop();
-
-    if (this.trailing) {
-      const { width, height } = this.image;
-      // copy the image to avoid seizures when dropping gifs
-      const image = this.p5.createImage(width, height);
-      image.copy(this.image, 0, 0, width, height, 0, 0, width, height);
-
-      for (let i = 0; i < this.history.length; i += 1) {
-        this.p5.push();
-        const { translation, rotation } = this.history[i];
-        // TODO: this needs improvement as it affects the trail AND the drop
-        this.p5.drawingContext.globalAlpha = i / this.history.length;
-        this.p5.translate(translation.x, translation.y);
-        this.p5.rotate(rotation);
-        this.p5.translate(0, image.height / 2);
-        this.p5.image(image, 0, 0);
-        this.p5.pop();
-      }
-    }
 
     return alpha <= 0;
   }
@@ -93,14 +84,25 @@ export default class Drop {
     // rotate by the drops wobble value mapped between -PI/16 and PI/16
     this.rotation = p5.map(p5.sin(this.wobble), -1, 1, -p5.QUARTER_PI / 2, p5.QUARTER_PI / 2);
 
-    // keep trailing history
-    this.history.push({
-      translation: this.translation,
-      rotation: this.rotation,
-    });
+    if (this.trailing) {
+      let trailImage = this.image;
+      // copy the image to avoid seizures when dropping gifs
+      if (this.image.numFrames() !== undefined) {
+        const { width, height } = image;
+        trailImage = this.p5.createImage(width, height);
+        trailImage.copy(this.image, 0, 0, width, height, 0, 0, width, height);
+      }
 
-    if (this.history.length >= config.trailLength) {
-      this.history.splice(0, 1);
+      // keep trailing history
+      this.history.push({
+        translation: this.translation,
+        rotation: this.rotation,
+        image: trailImage,
+      });
+
+      if (this.history.length >= config.trailLength) {
+        this.history.splice(0, 1);
+      }
     }
   }
 }
