@@ -93,12 +93,14 @@ export default class Drop {
         trailImage.copy(this.image, 0, 0, width, height, 0, 0, width, height);
       }
 
-      // keep trailing history
-      this.history.push({
-        translation: this.translation,
-        rotation: this.rotation,
-        image: trailImage,
-      });
+      // keep trailing history - tinker with the modulus for different effects
+      if (this.p5.frameCount % 4 === 0) {
+        this.history.push({
+          translation: this.translation,
+          rotation: this.rotation,
+          image: trailImage,
+        });
+      }
 
       if (this.history.length >= config.trailLength) {
         this.history.splice(0, 1);

@@ -47,14 +47,17 @@ export default function sketch(p5) {
     p5.frameRate(60);
     p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.P2D);
     if (config.test) {
+      const cjmotes = [
+        '303121909', '303117821', '303105450', '303105372', '303105326', '303046121', '303045914', '303008478', '303007613', '303007583',
+        '303007350', '303007238', '303007169', '303007002', '303006986', '303006827', '303006625', '303006622', '303006621', '303006610',
+        '302958222', '302039277', '301996771', '301988022', '301987997', '301980461', '303007794', '301988100', '301980473',
+      ].map((num) => `https://static-cdn.jtvnw.net/emoticons/v1/${num}/2.0`);
       const images = await Promise.all(
         [
-          'https://static-cdn.jtvnw.net/emoticons/v1/303046121/2.0',
-          'https://static-cdn.jtvnw.net/emoticons/v1/302039277/2.0',
-          'https://static-cdn.jtvnw.net/emoticons/v1/301988022/2.0',
-          'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/5ada077451d4120ea3918426/2x',
-          'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/5abc0096a05ad63caeccbe58/2x',
-          'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/59f06613ba7cdd47e9a4cad2/2x',
+          ...cjmotes,
+          // 'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/5ada077451d4120ea3918426/2x',
+          // 'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/5abc0096a05ad63caeccbe58/2x',
+          // 'https://cors-anywhere.herokuapp.com/https://cdn.betterttv.net/emote/59f06613ba7cdd47e9a4cad2/2x',
         ].map((url) => world.imageManager.getImage(url)),
       );
       world.drops = Array.from({ length: 1 }).reduce(
