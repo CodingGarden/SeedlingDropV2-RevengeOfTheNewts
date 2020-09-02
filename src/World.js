@@ -20,14 +20,9 @@ export default class World {
   }
 
   draw() {
-    const {
-      p5, trailing, drops, dropQueue,
-    } = this;
-    if (trailing) {
-      p5.background('rgba(255, 255, 255, 0.05)');
-    } else {
-      p5.clear();
-    }
+    const { p5, dropQueue } = this;
+    let { drops } = this;
+    p5.clear();
     const now = Date.now();
     drops = drops.filter((drop) => {
       drop.update();
@@ -64,9 +59,9 @@ export default class World {
 
   queueDrop(image) {
     if (this.drops.length <= config.maxVisibleDrops) {
-      this.drops.push(new Drop(this.p5, image));
+      this.drops.push(new Drop(this.p5, image, this.trailing));
     } else {
-      this.dropQueue.push(new Drop(this.p5, image));
+      this.dropQueue.push(new Drop(this.p5, image, this.trailing));
     }
   }
 }
