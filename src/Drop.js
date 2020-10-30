@@ -35,6 +35,9 @@ export default class Drop {
     this.p5.rotate(this.p5.map(this.p5.sin(this.wobble), -1, 1, -this.p5.QUARTER_PI / 2, this.p5.QUARTER_PI / 2));
     // translate down from the rotate point to the draw point (center)
     this.p5.translate(0, this.image.height / 2);
+    if (this.inGarden) {
+      this.p5.tint(0, 255, 0);
+    }
     this.p5.image(
       this.image,
       0, 0,
